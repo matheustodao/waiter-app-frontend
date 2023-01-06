@@ -7,10 +7,12 @@ import { useEffect } from 'react';
 interface OrderModalProps {
   visible: boolean,
   order: Order | null,
-  onClose: () => void
+  onClose: () => void,
+  onCancelOrder: () => void,
+  isLoading?: boolean,
 }
 
-export function OrderModal({ visible, order, onClose }: OrderModalProps) {
+export function OrderModal({ visible, order, onClose, onCancelOrder, isLoading}: OrderModalProps) {
   if (!visible || !order) return null;
 
   const totalPrice = order.products.reduce((total, { product, quantity }) => (
@@ -98,19 +100,23 @@ export function OrderModal({ visible, order, onClose }: OrderModalProps) {
         </OrderDetails>
 
         <Actions>
-          <button type="button" className="primary">
-            <span>
-              {order.status === 'WAITING' && '👨‍🍳'}
-              {order.status === 'IN_PRODUCTION' && '✅'}
-            </span>
+          {order.status !== 'DONE' && (
+            <button type="button" className="primary" disabled={isLoading}>
+              <span>
+                {order.status === 'WAITING' && '👨‍🍳'}
+                {order.status === 'IN_PRODUCTION' && '✅'}
+              </span>
 
-            <strong>
-              {order.status === 'WAITING' && 'Iniciar Produção'}
-              {order.status === 'IN_PRODUCTION' && 'Pronto!'}
-            </strong>
+              <strong>
+                {order.status === 'WAITING' && 'Iniciar Produção'}
+                {order.status === 'IN_PRODUCTION' && 'Pronto!'}
+              </strong>
+            </button>
+          )}
+
+          <button type="button" className="secondary" onClick={onCancelOrder} disabled={isLoading}>
+            Cancelar Pedido
           </button>
-
-          <button type="button" className="secondary">Cancelar Pedido</button>
         </Actions>
       </ModalBody>
     </Overlay>

@@ -10,6 +10,10 @@ export function Orders() {
   const inProduction = orders.filter((currentOrder) => currentOrder.status === 'IN_PRODUCTION');
   const done = orders.filter((currentOrder) => currentOrder.status === 'DONE');
 
+  function handleCancelOrder(orderId: string) {
+    setOrders((oldOrders) => oldOrders.filter((currentOrder) => currentOrder._id !== orderId));
+  }
+
   useEffect(() => {
     waiterAPI.get('/orders')
       .then(({ data }) => setOrders(data));
@@ -17,9 +21,9 @@ export function Orders() {
 
   return (
     <Container>
-      <OrderBoard icon="🕑" title="Fila de espera" orders={waiting} />
-      <OrderBoard icon="👨‍🍳" title="Em preparação" orders={inProduction} />
-      <OrderBoard icon="✅" title="Pronto!" orders={done} />
+      <OrderBoard icon="🕑" title="Fila de espera" orders={waiting} onCancelOrder={handleCancelOrder} />
+      <OrderBoard icon="👨‍🍳" title="Em preparação" orders={inProduction} onCancelOrder={handleCancelOrder} />
+      <OrderBoard icon="✅" title="Pronto!" orders={done} onCancelOrder={handleCancelOrder} />
     </Container>
   );
 }
