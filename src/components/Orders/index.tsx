@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { waiterAPI } from '../../services/api/waiterAPI';
-import { Order } from '../../types/Order';
+import { Order, OrderStatus } from '../../types/Order';
 import { OrderBoard } from '../OrderBoard';
 import { Container } from './styles';
 
@@ -14,6 +14,14 @@ export function Orders() {
     setOrders((oldOrders) => oldOrders.filter((currentOrder) => currentOrder._id !== orderId));
   }
 
+  function handleOrderStatusChange(orderId: string, status: OrderStatus) {
+    setOrders((oldOrders) => oldOrders.map((order) => (
+      order._id === orderId
+        ? { ...order, status }
+        : order
+    )));
+  }
+
   useEffect(() => {
     waiterAPI.get('/orders')
       .then(({ data }) => setOrders(data));
@@ -21,9 +29,29 @@ export function Orders() {
 
   return (
     <Container>
-      <OrderBoard icon="🕑" title="Fila de espera" orders={waiting} onCancelOrder={handleCancelOrder} />
-      <OrderBoard icon="👨‍🍳" title="Em preparação" orders={inProduction} onCancelOrder={handleCancelOrder} />
-      <OrderBoard icon="✅" title="Pronto!" orders={done} onCancelOrder={handleCancelOrder} />
+      <OrderBoard
+        icon="🕑"
+        title="Fila de espera"
+        orders={waiting}
+        onCancelOrder={handleCancelOrder}
+        onOrderStatusChange={handleOrderStatusChange}
+      />
+
+      <OrderBoard
+        icon="👨‍🍳"
+        title="Em preparação"
+        orders={inProduction}
+        onCancelOrder={handleCancelOrder}
+        onOrderStatusChange={handleOrderStatusChange}
+      />
+
+      <OrderBoard
+        icon="✅"
+        title="Pronto!"
+        orders={done}
+        onCancelOrder={handleCancelOrder}
+        onOrderStatusChange={handleOrderStatusChange}
+      />
     </Container>
   );
 }

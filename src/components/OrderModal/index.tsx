@@ -9,10 +9,18 @@ interface OrderModalProps {
   order: Order | null,
   onClose: () => void,
   onCancelOrder: () => void,
+  onChangeStatus: () => void,
   isLoading?: boolean,
 }
 
-export function OrderModal({ visible, order, onClose, onCancelOrder, isLoading}: OrderModalProps) {
+export function OrderModal({
+  visible,
+  order,
+  onClose,
+  onCancelOrder,
+  onChangeStatus,
+  isLoading,
+}: OrderModalProps) {
   if (!visible || !order) return null;
 
   const totalPrice = order.products.reduce((total, { product, quantity }) => (
@@ -101,7 +109,7 @@ export function OrderModal({ visible, order, onClose, onCancelOrder, isLoading}:
 
         <Actions>
           {order.status !== 'DONE' && (
-            <button type="button" className="primary" disabled={isLoading}>
+            <button type="button" className="primary" disabled={isLoading} onClick={onChangeStatus}>
               <span>
                 {order.status === 'WAITING' && '👨‍🍳'}
                 {order.status === 'IN_PRODUCTION' && '✅'}
