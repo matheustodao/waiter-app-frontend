@@ -4,7 +4,7 @@ export const Container = styled.header`
   background: #d73035;
   display: flex;
   justify-content: center;
-  height: 198px;
+  min-height: 198px;
 `;
 
 export const Content = styled.div`
@@ -29,6 +29,24 @@ export const Content = styled.div`
       font-size: 16px;
       opacity: 0.9;
       margin-top: 6px;
+    }
+  }
+
+  @media (max-width: 540px) {
+    flex-direction: column;
+    justify-content: center;
+    padding: 24px;
+
+    .page-details {
+      margin-bottom: 20px;
+
+      text-align: center;
+    }
+  }
+
+  @media (max-width: 344px) {
+    img {
+      display: none;
     }
   }
 `;
