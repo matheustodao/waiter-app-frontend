@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+
+import { socket } from '../../configs/socket';
 import { waiterAPI } from '../../services/api/waiterAPI';
 import { Order, OrderStatus } from '../../types/Order';
 import { OrderBoard } from '../OrderBoard';
@@ -21,6 +23,15 @@ export function Orders() {
         : order
     )));
   }
+
+  useEffect(() => {
+    socket.on('orders@new', (order: Order) => {
+      setOrders((oldOrders) => {
+        const existsOrder = oldOrders.findIndex((currentOrder) => currentOrder._id === order._id);
+        return existsOrder !== -1 ? oldOrders : oldOrders.concat(order);
+      });
+    });
+  }, []);
 
   useEffect(() => {
     waiterAPI.get('/orders')
